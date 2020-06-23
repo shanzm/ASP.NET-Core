@@ -54,6 +54,16 @@ using Microsoft.Extensions.Logging;
 
  */
 
+/*
+ 使用命令行运行.net core 程序
+在命令行中跳转到项目所在的目录，输入'dotnet run'即可运行
+使用命令指定端口：dotnet run --urls"http://*:5000"
+
+
+在命令行中跳转到项目所在的目录，有一个快捷方法，在资源管理器中打开项目所在的根目录，在窗口的目录地址中删除地址，输入cmd即可
+
+ */
+
 
 namespace _001HelloCore
 {
@@ -91,7 +101,8 @@ namespace _001HelloCore
                 .ConfigureWebHostDefaults(webBuilder =>//从前缀为“ASPNETCORE”的环境变量加载WEB主机配置，默认是将Kestrel设置为Web服务器并对其进行默认的设置，当然这里也可以设置为IIS服务器
                 {
                     //组件配置(不属于主机，但是由主机调用，都是扩展类提供的方法)
-                    //在这里配置称为硬编码，其实以上配置都是可以在配置文件中配置的
+                    //在这里配置称为---硬编码配置，
+                    //其实以下配置都是可以在配置文件中配置的
                     webBuilder.ConfigureKestrel(options => options.Limits.MaxRequestBodySize = 1024 * 1024 * 100);//配置请求体最大值是100M，默认是28.6M
                     webBuilder.ConfigureLogging(builder => builder.SetMinimumLevel(LogLevel.Debug));//配置日记记录的最小级别
 
@@ -104,7 +115,7 @@ namespace _001HelloCore
 }
 
 /*
-Kestre是一个跨平台的适用于ASP.NET Core的Web服务器
+Kestrel是一个跨平台的适用于ASP.NET Core的Web服务器
 可以简单的看作是IIS，但是其功能比较少，提供的都是Http服务
 
 注意Kestrel性能是极高的，而且可以运行在Linux上
@@ -113,3 +124,5 @@ Kestre是一个跨平台的适用于ASP.NET Core的Web服务器
 
 
 */
+
+

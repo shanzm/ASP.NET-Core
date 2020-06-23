@@ -1,3 +1,4 @@
+//环境变量的配置
 {
   "iisSettings": {
     "windowsAuthentication": false,
@@ -19,7 +20,8 @@
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http://*:7000"//环境变量配置。配置端口。注意这里的环境变量配置的优先级是比硬编码配置的级别低。所以在硬编码配置中的设置的端口号起作用
       },
       "applicationUrl": "http://localhost:5000"
     }
