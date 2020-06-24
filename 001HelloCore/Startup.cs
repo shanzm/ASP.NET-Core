@@ -12,6 +12,7 @@ namespace _001HelloCore
 {
     /// <summary>
     /// 这里才是我们Asp.Net Core Web 应用的启动类，
+    /// 该类中的方法用于配置管道和中间件 
     /// </summary>
     public class Startup
     {

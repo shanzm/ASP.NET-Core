@@ -62,6 +62,20 @@ using Microsoft.Extensions.Logging;
 
 在命令行中跳转到项目所在的目录，有一个快捷方法，在资源管理器中打开项目所在的根目录，在窗口的目录地址中删除地址，输入cmd即可
 
+配置的优先级：cmd 中命令行>appsettings.json中配置>Program.cs中硬编码>launchSettings.json环境变量
+
+注意配置不建议使用硬编码的方式，不灵活，建议使用配置文件或者使用命令行。凡是可以使用硬编码的方式，都是可以使用配置文件配置（自行搜索）
+
+ */
+
+/*
+ ASP.NET Core Web应用启动流程图
+Program.Main()-->
+CreateHostBuilder()-->
+Host.CreateDefaultBuilder()-->
+IHostBuilder中的UseStartup(Startup)-->
+Build()-->Run()-->
+Startup.Configure()
  */
 
 
@@ -75,7 +89,8 @@ namespace _001HelloCore
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            CreateHostBuilder(args).Build().Run();//build方法：创建主机构建器
+                                                    //run方法： 
         }
 
         //public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -106,8 +121,8 @@ namespace _001HelloCore
                     webBuilder.ConfigureKestrel(options => options.Limits.MaxRequestBodySize = 1024 * 1024 * 100);//配置请求体最大值是100M，默认是28.6M
                     webBuilder.ConfigureLogging(builder => builder.SetMinimumLevel(LogLevel.Debug));//配置日记记录的最小级别
 
-                    //
-                    webBuilder.UseStartup<Startup>();
+                    //主机配置项（单项配置）
+                    webBuilder.UseStartup<Startup>();//指定ASP.NET Core应用启动类
                     webBuilder.UseUrls("http://*:8000");//配置端口
                 });
         }
