@@ -74,7 +74,8 @@ Program.Main()-->
 CreateHostBuilder()-->
 Host.CreateDefaultBuilder()-->
 IHostBuilderÖÐµÄUseStartup(Startup)-->
-Build()-->Run()-->
+Build()-->Startup.ConfigureServices()-->
+Run()-->
 Startup.Configure()
  */
 
