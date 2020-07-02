@@ -21,7 +21,8 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "ASPNETCORE_URLS": "http://*:7000"//环境变量配置。配置端口。注意这里的环境变量配置的优先级是比硬编码配置的级别低。所以在硬编码配置中的设置的端口号起作用
+        "ASPNETCORE_URLS": "http://*:7000" //环境变量配置。配置端口。注意这里的环境变量配置的优先级是比硬编码配置的级别低。所以在硬编码配置中的设置的端口号起作用
+        //注意这里的环境变量名，就是ASPNETCORE_加上一部分，加上的这部分就是和Program.cs中硬编码配置中的 “webBuilder.UseUrls”的“Urls”改为大写
       },
       "applicationUrl": "http://localhost:5000"
     }
