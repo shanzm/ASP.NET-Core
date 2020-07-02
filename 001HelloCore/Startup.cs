@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;//依赖注入框架所在的命名空间
 using Microsoft.Extensions.Hosting;
 
 namespace _001HelloCore
@@ -19,12 +19,15 @@ namespace _001HelloCore
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         //配置服务
+        //这个方法是可选（如果没有服务的话，可以不写这个方法）
+        //以依赖注入的方法将服务添加到服务容器（IOC容器）
         public void ConfigureServices(IServiceCollection services)
         {
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         //配置管道
+        //这个方法是必须的
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
