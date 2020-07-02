@@ -7,4 +7,11 @@
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1development_1json__JsonSchema="https://json.schemastore.org/2.0.0-csd.2.beta.2018-10-10.json" appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
+  <ItemGroup>
+    <Compile Remove="笔记\**" />
+    <Content Remove="笔记\**" />
+    <EmbeddedResource Remove="笔记\**" />
+    <None Remove="笔记\**" />
+  </ItemGroup>
+
 </Project>
