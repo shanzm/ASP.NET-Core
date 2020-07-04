@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using _001HelloCore.Extensions;
 using _001HelloCore.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,7 +11,9 @@ using Microsoft.AspNetCore.Http;
 //.net 扩展包
 using Microsoft.Extensions.DependencyInjection;//依赖注入框架所在的命名空间
 //这个DI框架，是.net 自带的，相对比较简单，但是功能不多，普通需求够用的
-//如果需要使用更多功能，则可以使用第三方的IOC容器
+//如果需要使用更多功能，则可以使用第三方的IOC容器。
+//其实大部分的时候都是需要使用第三方的IOC容器的
+//在.net Core项目中使用第三方的IOC容器，其实使用方法都是一样的， 只是第三方的IOC容器将默认的IOC容器替换了而已
 //ASP.NET Core中依赖注入是最基础的，所有的类都需要注入，才可以使用，同时帮我们实现单例模式，管理单例对象
 using Microsoft.Extensions.Hosting;
 
@@ -77,12 +80,24 @@ namespace _001HelloCore
             //当然你也可以使用第三方的IOC，其实在AutoFac容器中是可以一个接口有多个不同实现类的
 
             //这里我们要思考一个问题：那就是我们自己写了一个第三方组件，这个组件需要依赖很多其他的服务，难道我们要让使用这个组件的开发人员在这里添加所有的依赖并选择生存周期吗
-            //当然不是这样的。我们可以创建一个服务扩展方法（新建一个Extensions文件夹，添加一个MessageServiceExtensions类）
+            //当然不是这样的。我们可以创建一个服务扩展方法（新建一个Extensions文件夹，添加一个MessageServiceExtensions类,给IServiceCollection接口扩展一个AddMessage方法）
+            services.AddMessage();//这里就是使用我们自己定义的扩展方法，可以将"services.AddTransient<IMessageService, SmsService>();"取而代之
+
+
+            //但是我们也看到了，IMessageService接口是有两个实现类的而，而我们对IServiceCollection扩展,添加的方法是" serviceCollection.AddSingleton<IMessageService, SmsService>();"
+            //即：添加的服务是"services.AddTransient<IMessageService, SmsService>();",然而我们若是需要添加“services.AddTransient<IMessageService, EmailService>();”服务则我们还要在对IServiceCollection扩展
+            //这里有另外的一种方法，使用构造器！
+            //首先添加一个构造器MessageServiceBuilder，在构造器中定义方法用于配置服务的方法
+            //在扩展方法中，添加一个扩展方法，其中一个参数是委托类型
+            services.AddMessage(options: builder => builder.UserSms());
+            //其实感觉这里为了配置服务，又是定义扩展类，又是定义构造器类，很麻烦，但是.net Core源码中到处都是这种方式！ 
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         //配置管道
         //这个方法是必须的
+        //在Program中的 CreateHostBuilder(args).Build().Run();运行之后，执行Configre()
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

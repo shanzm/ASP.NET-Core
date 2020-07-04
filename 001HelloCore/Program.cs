@@ -26,6 +26,7 @@ using Microsoft.Extensions.Logging;
 但是不建议这样，因为这是要运行所有的项目，自己的电脑的内存可能不够
 
 所有，可以调试自己想要看的部分代码，
+首先依旧是先运行resto.cmd（可能运行比较慢，因为它需要请求国外资源下载一些东西）
 
 点开：extension-->src-->选中需要查看的部分（比如Hosting表示主机类）-->点击该目录下的startvs.cmd
 
