@@ -98,22 +98,48 @@ namespace _001HelloCore
         //配置管道
         //这个方法是必须的
         //在Program中的 CreateHostBuilder(args).Build().Run();运行之后，执行Configre()
+        //管道：Pipeline，其中包含各种中间件，在.netCore 中路由、认证、会话、缓存等等都是通过管道实现的
+        //MVC,WebApi这个web开发在.netCore中就是建立在不同的中间件（Middleware)之上。
+        //我们可以编写中间件，扩展请求通道。所以你要是想要建立一个自己的类似MVC的框架等，就可以通过编写大量的中间件来实现。
+
+        //每个中间件都有两个职责：
+        //1. 选择是否将请求传递给管道中的下一个中间件
+        //2. 在管道的下一个中间件的前后执行工作
+        //简而言之:每一个中间件都有权作出是否将请求传递给下一个中间件，也可以直接作出响应
+        //就是说：若是当前中间件决定不需要将请求传递给下一个中间件，则当前中间件就直接作出响应，请求不在继续传到到后续的中间件中（这也称为管道的短路）。
+        //举个例子：比如说http请求，经历的第一个中间件可以是权限验证中间件，若是没有通过权限验证，则可以直接作出响应，不需要把请求传递到后续的中间件。
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
 
-            app.UseRouting();
-
-            app.UseEndpoints(endpoints =>
+            //使用Use添加中间件
+            app.Use(async (context,next) => 
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                //请求处理
+                await context.Response.WriteAsync("Middleware 1 begin");
+                await next();//有这一句则该中间件将请求传递到下一个中间件，没有则直接进行响应处理
+                //响应处理
+                await context.Response.WriteAsync("Middleware 1 end");
             });
+
+            //使用Run()函数添加终端中间件（终结点），终端中间件只有一个，而且这个中间件是最后一个中间件，之后就没有了，就是对请求的响应处理了
+            //这里这个中间件的作用就是打印"hello Run中间件 "
+            //Run（）函数的参数是一个异步的委托，其参数是HttpContext类型的
+            app.Run(async context => { await context.Response.WriteAsync("hello Middleware "); });
+
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
+
+            //app.UseRouting();
+
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapGet("/", async context =>
+            //    {
+            //        await context.Response.WriteAsync("Hello World!");
+            //    });
+            //});
         }
     }
 }
