@@ -108,38 +108,62 @@ namespace _001HelloCore
         //简而言之:每一个中间件都有权作出是否将请求传递给下一个中间件，也可以直接作出响应
         //就是说：若是当前中间件决定不需要将请求传递给下一个中间件，则当前中间件就直接作出响应，请求不在继续传到到后续的中间件中（这也称为管道的短路）。
         //举个例子：比如说http请求，经历的第一个中间件可以是权限验证中间件，若是没有通过权限验证，则可以直接作出响应，不需要把请求传递到后续的中间件。
+
+        //中间件是有顺序的，中间件执行顺序就是你在这里的书写顺序
+
+        //其实从下面添加中间件可以发现，中间件本质就是一堆委托
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
 
-            //使用Use添加中间件
-            app.Use(async (context,next) => 
+            /*我们在这里使用Use和Run添加两个中间件
+
+           //使用Use添加中间件
+           app.Use(async (context, next) =>
+           {
+               //请求处理
+               await context.Response.WriteAsync("Middleware 1 begin");
+               await next();//有这一句则该中间件将请求传递到下一个中间件，没有则直接进行本中间件的响应处理(也就是触发管道短路)
+               //注意一切可以触发管道短路的中间件都是可以称之为终端终端中间件（终结点），所以这里我们只要把await next()删除，则本中间件就是终端中间件了
+
+               //响应处理
+               await context.Response.WriteAsync("Middleware 1 end");
+           });
+
+           //注意一些中间件是依赖某些服务的，所以在配置中间件的时候，你要现在ConfigureServices()中添加相应的服务
+           //比如说这里要使用跨域中间件,则你需要在ConfigureServices()中添加services.AddCors()
+           //然后在这里添加中间件：
+           // app.UseCors();
+
+           //使用Run()函数添加终端中间件（终结点），终端中间件只有一个，而且这个中间件是最后一个中间件，之后就没有了，就是对请求的响应处理了
+           //这里这个中间件的作用就是打印"hello Run中间件 "
+           //Run（）函数的参数是一个异步的委托，其参数是HttpContext类型的
+           app.Run(async context => { await context.Response.WriteAsync("hello Middleware "); });
+
+           */
+
+            if (env.IsDevelopment())//判断当前是否是开发这环境，在launchSettings.json中我们默认配置的环境变量是开发者环境“  "ASPNETCORE_ENVIRONMENT": "Development",”
             {
-                //请求处理
-                await context.Response.WriteAsync("Middleware 1 begin");
-                await next();//有这一句则该中间件将请求传递到下一个中间件，没有则直接进行响应处理
-                //响应处理
-                await context.Response.WriteAsync("Middleware 1 end");
+                app.UseDeveloperExceptionPage();//开发者异常界面中间件，如果出现异常则会把异常显示在该页面
+            }
+
+            //终端路由中间件
+            //用于匹配路由和终结点
+            app.UseRouting();
+
+            //终结点中间件(即终端中间件，其实不是指某个特定的中间件，而是指能够触发管道短路的一类中间件)
+            //用于配置路由和终结点之间的映射关系
+            //注意在.net Core 2.X版本中UseRouting和UseEndpoints是统一为一个称之为路由中间件,在3.0中拆分为两个，这两个在项目中是 缺一不可的
+            //终结点，可以视为应用程序提供针对HTTP请求的处理器
+            //比如说，若是MVC项目则终结点就是控制器中的某个方法
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapGet("/", async context =>
+                {
+                    await context.Response.WriteAsync("Hello World!");
+                });//第一参数其实就是路由模版
             });
 
-            //使用Run()函数添加终端中间件（终结点），终端中间件只有一个，而且这个中间件是最后一个中间件，之后就没有了，就是对请求的响应处理了
-            //这里这个中间件的作用就是打印"hello Run中间件 "
-            //Run（）函数的参数是一个异步的委托，其参数是HttpContext类型的
-            app.Run(async context => { await context.Response.WriteAsync("hello Middleware "); });
-
-            //if (env.IsDevelopment())
-            //{
-            //    app.UseDeveloperExceptionPage();
-            //}
-
-            //app.UseRouting();
-
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapGet("/", async context =>
-            //    {
-            //        await context.Response.WriteAsync("Hello World!");
-            //    });
-            //});
+            //这里我们使用useXX添加中间件，其实其内部不是调用Use()就是调用Run()
         }
     }
 }
