@@ -80,7 +80,7 @@ namespace _001HelloCore
             //当然你也可以使用第三方的IOC，其实在AutoFac容器中是可以一个接口有多个不同实现类的
 
             //这里我们要思考一个问题：那就是我们自己写了一个第三方组件，这个组件需要依赖很多其他的服务，难道我们要让使用这个组件的开发人员在这里添加所有的依赖并选择生存周期吗
-            //当然不是这样的。我们可以创建一个服务扩展方法（新建一个Extensions文件夹，添加一个MessageServiceExtensions类,给IServiceCollection接口扩展一个AddMessage方法）
+            //当然不是这样的。我们可以创建一个服务扩展方法（新建一个Extensions文件夹，添加一个MessageServiceExtensions类,给IServiceCollection接口（也就是这里的services对象）扩展一个AddMessage方法）
             services.AddMessage();//这里就是使用我们自己定义的扩展方法，可以将"services.AddTransient<IMessageService, SmsService>();"取而代之
 
 
@@ -141,6 +141,15 @@ namespace _001HelloCore
 
            */
 
+            //自定义中间件：我们添加一个TestMiddleware.cs定义中间件
+            //将自定义的中间件TestMiddleware添加到管道中
+            app.UseMiddleware<TestMiddleware>();
+
+            //顺便说一句在这个页面打断点是没有意义的，这个页面都是在对服务和中间件进行配置，这些委托是不会在这个页面执行的，中间件配置在Program中的 "  CreateHostBuilder(args).Build().Run();"运行中的时候执行一次
+            //我们可以在中间件的内部打断点
+
+
+
             if (env.IsDevelopment())//判断当前是否是开发这环境，在launchSettings.json中我们默认配置的环境变量是开发者环境“  "ASPNETCORE_ENVIRONMENT": "Development",”
             {
                 app.UseDeveloperExceptionPage();//开发者异常界面中间件，如果出现异常则会把异常显示在该页面
@@ -164,6 +173,9 @@ namespace _001HelloCore
             });
 
             //这里我们使用useXX添加中间件，其实其内部不是调用Use()就是调用Run()
+
+
+           
         }
     }
 }
