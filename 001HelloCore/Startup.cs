@@ -160,6 +160,9 @@ namespace _001HelloCore
 
             //如果我们自定义一个中间件，发布出去希望给别人使用，
             //但是用户是不知道怎么使用的，这时候我们就是可以使用扩展方法，从而用户就可以像是使用app.UseXXX()的方式使用我们的中间件
+            //添加CustomMiddlewareExtensions类，对IApplicationBuilder接口扩展
+            app.UseTest();//这里使用自己定义的扩展方法，从而不需要在使用app.UseMiddleware<TestMiddleware>();来添加自定义的中间件。
+
 
 
             //顺便说一句在这个页面打断点是没有意义的，这个页面都是在对服务和中间件进行配置，这些委托是不会在这个页面执行的，中间件配置在Program中的 "  CreateHostBuilder(args).Build().Run();"运行中的时候执行一次
