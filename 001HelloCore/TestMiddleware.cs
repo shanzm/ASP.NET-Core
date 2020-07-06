@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace _001HelloCore
 {
+    //这个类就是自定义的中间件
 
     //这里首先就有一个疑问？为什么要自定义中间件，
     //其实我们编写WEB应用，实际上就是在写中间件，比如说你写MVC中的控制器，而控制器就是中间件的一部分
