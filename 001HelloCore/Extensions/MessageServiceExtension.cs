@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace _001HelloCore.Extensions
 {
+    //注意这是对IServiceCollection接口扩展，理论上应该命名为：IServiceCollectionExtension
     public static class MessageServiceExtension
     {
         //对IServiceCollection接口进行扩展，添加一个AddMessage方法

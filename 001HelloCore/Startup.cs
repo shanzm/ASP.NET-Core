@@ -154,12 +154,17 @@ namespace _001HelloCore
 
 
             /*------------------------------------------------------------------添加自定义中间件------------------------------------------------*/
+
+            //其实使用上面使用app.Use()配置中间件，其参数是一个委托，该委托就是一个中间件。
+
             //自定义中间件：我们添加一个TestMiddleware.cs定义中间件
             //将自定义的中间件TestMiddleware添加到管道中
             app.UseMiddleware<TestMiddleware>();
 
             //如果我们自定义一个中间件，发布出去希望给别人使用，
-            //但是用户是不知道怎么使用的，这时候我们就是可以使用扩展方法，从而用户就可以像是使用app.UseXXX()的方式使用我们的中间件
+            //有时候我们自定义的中间件可能需要复杂的配置
+            //但是用户是不知道怎么使用的，这时候我们就是可以使用扩展方法，在扩展方法中为用户配置后，
+            //从而用户就可以像是使用app.UseXXX()的方式使用我们的中间件
             //添加CustomMiddlewareExtensions类，对IApplicationBuilder接口扩展
             app.UseTest();//这里使用自己定义的扩展方法，从而不需要在使用app.UseMiddleware<TestMiddleware>();来添加自定义的中间件。
 
@@ -194,10 +199,16 @@ namespace _001HelloCore
             });
 
             //这里我们使用useXX添加中间件，其实其内部不是调用Use()就是调用Run()
-
-
            
         }
     }
 }
 
+
+//怎么在.net Core 中查看管道的源码
+//https://source.dot.net/
+//搜索IApplicationBuilder转到该接口的实现，当然我们没有下载.netCore的源代码，所可以直接搜索ApplicationBuilder即可
+//https://source.dot.net/#Microsoft.AspNetCore.Http/Builder/ApplicationBuilder.cs,036bfc42ede25c42
+//在ApplicationBuilder类中有一个Use()方法
+//我们就可以发现，我们使用Use()方法添加一个中间件，其实就是往名为_components集合中添加一个委托
+//ApplicationBuilder类中的Build方法就是构建管道的。
