@@ -45,7 +45,9 @@ namespace _003ReadConfiguration
             services.Configure<AppSetting>(_configuration);
 
             //默认_configuration读取的appsettings.json文件
-            //若是我们自己创建一个配置文件，比如说customsettings文件，则我们需要以下写法；
+            //若是我们自己创建一个配置文件，比如说customsettings文件，则我们需要以下写法：
+            //依旧是先创建一个配置模型类CustomSetting
+            //这里说一个技巧，复制json文件，然后在新建的文件中：编辑-->选择性粘贴-->将JSON粘贴为类
             var customConfig = new ConfigurationBuilder().AddJsonFile("customsettings.json").Build();
             services.Configure<CustomSetting>(customConfig);
 
