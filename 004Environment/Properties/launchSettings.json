@@ -1,0 +1,30 @@
+﻿{
+  "iisSettings": {
+    "windowsAuthentication": false, 
+    "anonymousAuthentication": true, 
+    "iisExpress": {
+      "applicationUrl": "http://localhost:64698",
+      "sslPort": 0
+    }
+  },
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "_004Environment": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "applicationUrl": "http://localhost:5000",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Demo"
+        //.net Core中自带的启动环境变量有三种：Development（开发者环境），Staging(演示环境），Production（生产环境）
+        //同时.net Core 支持自定义启动环境变量，比如我们在这里可以自定义一个：
+        //"ASPNETCORE_ENVIRONMENT": "Demo"
+      }
+    }
+  }
+}
